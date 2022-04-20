@@ -303,12 +303,15 @@ def _convert_clauses_to_text(propositions, inflect, capitalize):
 def _get_verb_matches(span):
     # 1. Find verb phrases in the span
     # (see mdmjsh answer here: https://stackoverflow.com/questions/47856247/extract-verb-phrases-using-spacy)
-
+    
     verb_matcher = Matcher(span.vocab)
-    verb_matcher.add("Auxiliary verb phrase aux-verb", [
-        [{"POS": "AUX"}, {"POS": "VERB"}]])
-    verb_matcher.add("Auxiliary verb phrase", [[{"POS": "AUX"}]])
-    verb_matcher.add("Verb phrase", [[{"POS": "VERB"}]],)
+    pattern = [{'POS':'VERB','OP':'?'},
+            {'POS':'ADV','OP':'*'},
+            {'POS':'AUX', 'OP':'*'},
+            {'POS':'PART', 'OP':'?'},
+            {'POS':'VERB', 'OP':'+'},
+            {'POS':'ADP','DEP':'prt','OP':'*'}]
+    verb_matcher.add("VERB_PHRASE", [pattern], greedy='LONGEST')
 
     return verb_matcher(span)
 
