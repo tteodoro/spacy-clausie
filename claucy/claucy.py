@@ -305,10 +305,9 @@ def _get_verb_matches(span):
     # (see mdmjsh answer here: https://stackoverflow.com/questions/47856247/extract-verb-phrases-using-spacy)
     
     verb_matcher = Matcher(span.vocab)
-    pattern = [{'POS':'VERB','OP':'?'},
-            {'POS':'ADV','OP':'*'},
-            {'POS':'AUX', 'OP':'*'},
-            {'POS':'PART', 'OP':'?'},
+    pattern = [
+            {'POS':'VERB','OP':'?'},
+            {'POS': {'IN': ['AUX', 'PART', 'ADV']}, 'OP':'*'},
             {'POS':'VERB', 'OP':'+'},
             {'POS':'ADP','DEP':'prt','OP':'*'}]
     verb_matcher.add("VERB_PHRASE", [pattern], greedy='LONGEST')
